@@ -4,14 +4,14 @@ var _ = require("lodash");
 var worker = function(input) {
 
   return _.chain(input)
-    .groupBy('username')
-    .map((user, key) => {
+    .groupBy('article')
+    .map((command, key) => {
       return {
-        username: key,
-        comment_count: _.size(user)
+        article: +key,
+        total_orders: _.reduce(command, (sum, item) => sum + item.quantity, 0)
       }
     })
-    .sortBy('comment_count')
+    .sortBy('total_orders')
     .reverse()
     .value();
 };
