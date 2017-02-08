@@ -2,19 +2,22 @@
 var _ = require("lodash");
 
 var worker = function(input) {
-  return _.forEach(input, function(item) {
-    switch (true) {
-      case (item.population * 1000 > 1000):
-        item.size = 'big';
-        break;
-      case (item.population * 1000 > 500):
-        item.size = 'med';
-        break;
-      default:
-        item.size = 'small';
+
+  var hot = [];
+  var warm = [];
+
+  _.forEach(input, function(values, key) {
+    if (_.every(values, value => value > 19)) {
+      hot.push(key);
+    } else if (_.some(values, value => value > 19)) {
+      warm.push(key);
     }
-    return item;
   });
+
+  return {
+    hot: hot,
+    warm: warm
+  };
 };
 
 // export the worker function as a nodejs module
