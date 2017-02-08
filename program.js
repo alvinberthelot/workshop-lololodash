@@ -4,9 +4,15 @@ var _ = require("lodash");
 var worker = function(input) {
 
   return _.chain(input)
-    .map(item => item + 'chained')
-    .map(item => item.toUpperCase())
-    .sortBy(item => item)
+    .groupBy('username')
+    .map((user, key) => {
+      return {
+        username: key,
+        comment_count: _.size(user)
+      }
+    })
+    .sortBy('comment_count')
+    .reverse()
     .value();
 };
 
