@@ -2,7 +2,7 @@
 var _ = require("lodash");
 
 var worker = function(input) {
-  return _.filter(input, { 'active': true });
+  return _.sortBy(input, 'quantity').reverse();
 };
 
 // export the worker function as a nodejs module
