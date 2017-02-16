@@ -1,19 +1,22 @@
-// include the Lo-Dash library
-var _ = require("lodash");
+ // include the Lo-Dash library
+    var _ = require("lodash");
 
+    var worker = function(list) {
+        return _.chain(list)
+        .groupBy('username')
+        .reduce(function(acc, value, key){
 
-var myEvery = function(collection, callback) {
+          var tab = {
+            'username':key,
+            'comment_count':_.size(value)
+          };
 
-}
+          acc.push(tab);
+          return acc;
 
-
-var worker = function(input) {
-    return _.chain(input)
-    .map((item) => { return item + 'chained'})
-    .map((item) => { return item.toUpperCase()})
-    .sortBy()
-    .value();
-};
-
-// export the worker function as a nodejs module
-module.exports = worker;
+        }, [])
+        .sortBy('comment_count').reverse()
+        .value();
+    };
+    // export the worker function as a nodejs module
+    module.exports = worker;
