@@ -2,15 +2,23 @@
 var _ = require("lodash");
 
 var worker = function(input) {
-    return _.forEach(input, function(value, key) {
-       if(value.population < 0.5) {
-          value.size = "small";
-       } else if(value.population < 1) {
-          value.size = "med";
-       } else {
-          value.size = "big";
-       }
+    let result = {};
+    result.hot = [];
+    result.warm = [];
+
+    _.forEach(input, function(temperatures, cityname) {
+      if(_.every(temperatures, function(temperature) {
+          return temperature > 19;
+      })) {
+        result.hot.push(cityname);
+      } else if (_.some(temperatures, function(temperature) {
+          return temperature > 19;
+      })) {
+        result.warm.push(cityname);
+      }
     });
+
+    return result;
 };
 
 // export the worker function as a nodejs module
