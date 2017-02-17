@@ -1,27 +1,36 @@
+// include the Lo-Dash library
 var _ = require("lodash");
 
-var worker = function(articles) {
+var worker = function(input) {
 
-  //var test = _.groupBy(articles, 'article');
-
-
-  return _.chain(articles)
-    .groupBy('article')
-    .reduce(function(acc, articlesGB) {
-      var monArticle = _.reduce(articlesGB, function(somme_articles, article){
-        somme_articles.article = article.article;
-        somme_articles.total_orders += article.quantity;
-        return somme_articles;
-      }, {total_orders: 0})
-      acc.push(monArticle);
-      return acc;
-    }, [])
-    .sortBy(function(articleGB){
-      return articleGB.total_orders
+  return _.reduce(input, function(acc, freelance, index, collection){
+    var numbers = _.map(collection, function(freelance){
+      return freelance.income;
     })
-    .reverse()
-    .value();
+
+    var freelancesSorted = _.sortBy(collection, function(freelance){
+      return freelance.income;
+    });
+
+    acc.average = averageIncome(numbers);
+
+    acc.underperform = _.filter(freelancesSorted, function(freelance){
+      return freelance.income <= acc.average;
+    });
+
+    acc.overperform = _.filter(freelancesSorted, function(freelance){
+      return freelance.income > acc.average;
+    });
+
+    return acc;
+  }, {});
 };
+
+let averageIncome = function(values){
+  return _.reduce(values, function(sum, number, index, collection){
+    return (100*sum + (100*number / collection.length))/100;
+  }, 0);
+}
 
 // export the worker function as a nodejs module
 module.exports = worker;
